@@ -29,13 +29,9 @@ export default class Main extends Component {
     const response = await api.get(
       `characters?name=${newChar}&ts=${ts}&&apikey=${apiKey}&hash=${hash}`
     );
-    const data = {
-      id: response.data.id,
-      name: response.data.name,
-    };
 
     this.setState({
-      character: [...character, data],
+      character: [...character, ...response.data.data.results],
       newChar: '',
       loading: false,
     });
@@ -60,7 +56,7 @@ export default class Main extends Component {
           />
           <SubmitButton loading={loading}>
             {loading ? (
-              <FaSpinner olor="#fff" size={14} />
+              <FaSpinner color="#fff" size={14} />
             ) : (
               <FaPlus color="#fff" size={14} />
             )}
