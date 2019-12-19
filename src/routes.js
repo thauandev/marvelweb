@@ -8,7 +8,7 @@ export default function Routes() {
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={Main} />
-        <Route path="/char" component={Char} />
+        <Route path="/char/:char" component={Char} />
       </Switch>
     </BrowserRouter>
   );

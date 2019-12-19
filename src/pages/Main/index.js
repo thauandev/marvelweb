@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { FaUserNinja, FaPlus, FaSpinner } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 import api from '../../services/api';
-import { Container, Form, SubmitButton, List } from './styles';
+
+import { Form, SubmitButton, List } from './styles';
+import Container from '../../components/Container';
 
 export default class Main extends Component {
   // eslint-disable-next-line react/state-in-constructor
@@ -11,6 +14,22 @@ export default class Main extends Component {
     character: [],
     loading: false,
   };
+
+  componentDidMount() {
+    const character = localStorage.getItem('character');
+
+    if (character) {
+      this.setState({ character: JSON.parse(character) });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    const { character } = this.state;
+
+    if (prevState.character !== character) {
+      localStorage.setItem('character', JSON.stringify(character));
+    }
+  }
 
   handleInputChange = e => {
     this.setState({ newChar: e.target.value });
@@ -66,6 +85,9 @@ export default class Main extends Component {
           {character.map(char => (
             <li key={char.id}>
               <span>{char.name}</span>
+              <Link to={`/char/${encodeURIComponent(char.name)}`}>
+                Detalhes
+              </Link>
             </li>
           ))}
         </List>
