@@ -1,10 +1,12 @@
+/* eslint-disable react/static-property-placement */
 /* eslint-disable react/state-in-constructor */
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
 import api from '../../services/api';
 
 import Container from '../../components/Container';
+import { Hero } from './styles';
 
 export default class Char extends Component {
   static propTypes = {
@@ -37,7 +39,20 @@ export default class Char extends Component {
 
   render() {
     const { character } = this.state;
+    const thumb = character.map(char => char.thumbnail);
 
-    return <Container>{character.name}</Container>;
+    return (
+      <Container>
+        <Hero>
+          <Link to="/">Back to Heroes</Link>
+          <img
+            src={`${thumb.map(th => th.path)}.${thumb.map(th => th.extension)}`}
+            alt=""
+          />
+          <h1>{character.map(char => char.name)}</h1>
+          <p>{character.map(char => char.description)}</p>
+        </Hero>
+      </Container>
+    );
   }
 }

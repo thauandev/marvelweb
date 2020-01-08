@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { FaUserNinja, FaPlus, FaSpinner } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-
 import api from '../../services/api';
 
 import { Form, SubmitButton, List } from './styles';
@@ -63,13 +62,13 @@ export default class Main extends Component {
       <Container>
         <h1>
           <FaUserNinja />
-          Herois
+          Heroes
         </h1>
 
         <Form onSubmit={this.handleSubmit}>
           <input
             type="text"
-            placeholder="Adicionar Heroi"
+            placeholder="Add Hero"
             value={newChar}
             onChange={this.handleInputChange}
           />
@@ -85,9 +84,7 @@ export default class Main extends Component {
           {character.map(char => (
             <li key={char.id}>
               <span>{char.name}</span>
-              <Link to={`/char/${encodeURIComponent(char.name)}`}>
-                Detalhes
-              </Link>
+              <Link to={`/char/${encodeURIComponent(char.name)}`}>Details</Link>
             </li>
           ))}
         </List>
