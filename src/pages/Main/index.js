@@ -12,6 +12,7 @@ export default class Main extends Component {
     newChar: '',
     character: [],
     loading: false,
+    error: null,
   };
 
   componentDidMount() {
@@ -31,32 +32,47 @@ export default class Main extends Component {
   }
 
   handleInputChange = e => {
-    this.setState({ newChar: e.target.value });
+    this.setState({ newChar: e.target.value, error: null });
   };
 
   handleSubmit = async e => {
     e.preventDefault();
 
-    this.setState({ loading: true });
+    this.setState({ loading: true, error: false });
+    try {
+      const { newChar, character } = this.state;
 
-    const { newChar, character } = this.state;
+      const apiKey = '9b444a9c5e417fe3f94a86f7d31cf2d4';
+      const hash = '7e50ac1b185dc4c3127c3219653a520a';
+      const ts = 1;
 
-    const apiKey = '9b444a9c5e417fe3f94a86f7d31cf2d4';
-    const hash = '7e50ac1b185dc4c3127c3219653a520a';
-    const ts = 1;
-    const response = await api.get(
-      `characters?name=${newChar}&ts=${ts}&&apikey=${apiKey}&hash=${hash}`
-    );
+      if (newChar === '') {
+        throw new Error('Hero is empty');
+      }
 
-    this.setState({
-      character: [...character, ...response.data.data.results],
-      newChar: '',
-      loading: false,
-    });
+      const hasChar = character.find(c => c.name === newChar);
+
+      if (hasChar) {
+        throw new Error('Hero already exists');
+      }
+
+      const response = await api.get(
+        `characters?name=${newChar}&ts=${ts}&&apikey=${apiKey}&hash=${hash}`
+      );
+
+      this.setState({
+        character: [...character, ...response.data.data.results],
+        newChar: '',
+      });
+    } catch (error) {
+      this.setState({ error: true });
+    } finally {
+      this.setState({ loading: false });
+    }
   };
 
   render() {
-    const { newChar, character, loading } = this.state;
+    const { newChar, character, loading, error } = this.state;
 
     return (
       <Container>
@@ -65,7 +81,7 @@ export default class Main extends Component {
           Heroes
         </h1>
 
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.handleSubmit} error={error}>
           <input
             type="text"
             placeholder="Add Hero"
